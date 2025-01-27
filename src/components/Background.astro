@@ -1,0 +1,41 @@
+---
+
+---
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        /* ギャラリー全体のレイアウト */
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px; /* 各額縁の間隔 */
+      justify-content: center;
+    }
+    
+    /* 額縁のスタイル */
+    .frame {
+      width: 200px; /* 額縁の幅 */
+      height: 200px; /* 額縁の高さ */
+      background-size: cover; /* 背景画像をフレーム全体にフィットさせる */
+      background-position: center; /* 画像を中央に配置 */
+      border: 10px solid #8b4513; /* 木製のような額縁 */
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* 影を追加 */
+      border-radius: 10px; /* 角を丸くする */
+    }
+    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Background Images in Frames</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="gallery">
+    <div class="frame" style="background-image: url('/path/to/image1.jpg');"></div>
+    <div class="frame" style="background-image: url('/path/to/image2.jpg');"></div>
+    <div class="frame" style="background-image: url('/path/to/image3.jpg');"></div>
+  </div>
+</body>
+</html>
