@@ -25,10 +25,9 @@ jobs:
           package-manager: pnpm@latest # パッケージマネージャ
 
       - name: Upload artifact for deployment
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-pages-artifact@v2
         with:
-          name: github-pages-artifact
-          path: ./dist # Astroのビルド出力ディレクトリ
+          path: ./dist # Astroのビルド成果物
 
   deploy:
     needs: build
@@ -37,12 +36,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: github-pages-artifact
-          path: ./dist
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
