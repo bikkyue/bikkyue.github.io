@@ -4,8 +4,13 @@ interface Props {
   icon: string;
 }
 const { link, icon } = Astro.props;
+const isImage = icon.endsWith(".png") || icon.endsWith(".jpg") || icon.endsWith(".jpeg") || icon.endsWith(".svg");
 ---
 
-<a class='text-3xl' aria-label='link' target='_blank' href={`https://${link}`}
-  ><i class={icon}></i></a
->
+<a class="text-3xl" aria-label="link" target="_blank" href={`https://${link}`}>
+  {isImage ? (
+    <img src={icon} alt="icon" class="w-6 h-6" />
+  ) : (
+    <i class={icon}></i>
+  )}
+</a>
