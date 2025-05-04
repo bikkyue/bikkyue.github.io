@@ -1,0 +1,41 @@
+---
+// リンクデータをここで定義
+const links = [
+  {
+    desc: "VRChat",
+    link: "vrchat.com/home/user/usr_b2ab2e1c-7ef0-4ffb-ab58-e2645d62bc9c",
+    icon: "/icon/VRC.png",
+  },
+  {
+    desc: "Note　",
+    link: "note.com/bikyu83",
+    icon: "/icon/note.png",
+  }
+];
+
+// 内部で使うユーティリティ関数
+function isImage(icon: string): boolean {
+  return icon.endsWith(".png") || icon.endsWith(".jpg") || icon.endsWith(".jpeg") || icon.endsWith(".svg");
+}
+---
+
+<div class="grid justify-center gap-4">
+  {
+    links.map(({ desc, link, icon }) => (
+      <a
+        href={`https://${link}`}
+        target="_blank"
+        class="bg-black/10 p-6 rounded-2xl border-white/10 border active:scale-95 duration-200 ease-in-out hover:brightness-200"
+      >
+        <div class="flex gap-4 justify-between items-center">
+          {isImage(icon) ? (
+            <img src={icon} alt={desc} class="w-8 h-8 object-contain" />
+          ) : (
+            <i class={`${icon} text-xl`}></i>
+          )}
+          <h1 class="font-extrabold text-2xl">{desc}</h1>
+        </div>
+      </a>
+    ))
+  }
+</div>
