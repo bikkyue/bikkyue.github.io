@@ -1,20 +1,7 @@
 ---
-import Card from "../components/card.astro";
-import Chip from "../components/chip.astro";
-
-
-const links: Link[] = [
-  {
-    desc: "VRChat", // 表示されるテキスト
-    link: "vrchat.com/home/user/usr_b2ab2e1c-7ef0-4ffb-ab58-e2645d62bc9c", // リンク先
-    icon: "/icon/VRC.png", // アイコン画像のパス
-  },
-  {
-    desc: "Note　", // 表示されるテキスト
-    link: "note.com/bikyu83", // リンク先
-    icon: "/icon/note.png", // アイコン画像のパス
-  }
-];
+import ProfileIcon from "../components/ProfileIcon.astro";
+import LinkList from "../components/LinkList.astro";
+import SocialLinks from "../components/SocialLinks.astro";
 
 ---
 
@@ -50,19 +37,6 @@ const links: Link[] = [
       color: white;
       text-align: center;
     }
-    .icon {
-    display: flex;
-    justify-content: center;
-    width: 15vw; /* ビューポートの幅に対する割合 */
-    height: 15vw;
-    max-width: 150px; /* 最大サイズ制限 */
-    max-height: 150px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 2px solid #FFFFFF;
-    margin: 0 auto;
-  }
-
   @media (max-width: 768px) {
     .icon {
       width: 100px; /* スマホ向けに小さく */
@@ -74,26 +48,11 @@ const links: Link[] = [
   <body
     class='bg-[#1e1e1e] flex justify-center items-center w-screen h-screen font-[Geist] text-white'
   >
-
     <main class='w-[80%] flex flex-col gap-8'>
-
-      <div class='icon grid justify-center gap-4'>
-        <img src='/icon/Profile.png'>
-      </div>
+      <ProfileIcon />
       <h1 class='md:text-6xl text-4xl font-black text-center'>Bikyu</h1>
-      <div class='grid justify-center gap-4'>
-        {
-          links.map(({ desc, link, icon }) => {
-            return <Card {desc} {link} {icon} />;
-          })
-        }
-      </div>
-      <div class='flex justify-center gap-8'>
-        <!-- Put some social links who have a definitive icon here: -->
-        <Chip link='youtube.com/@bikyu42' icon='fa-brands fa-youtube' />
-        <Chip link='x.com/Alche_bky' icon='fa-brands fa-x-twitter' />
-      </div>
-      <!--p class='text-center mx-auto'>Some additional text, like your email</p-->
+      <LinkList/>
+      <SocialLinks />
     </main>
   </body>
 </html>

@@ -1,0 +1,30 @@
+---
+// props を使って画像のパスをカスタマイズ可能にします
+const { src = "/icon/Profile.png", alt = "Profile Icon" } = Astro.props;
+---
+
+<div class="icon grid justify-center gap-4">
+  <img src={src} alt={alt} />
+</div>
+
+<style>
+  .icon {
+    display: flex;
+    justify-content: center;
+    width: 15vw;
+    height: 15vw;
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #FFFFFF;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 768px) {
+    .icon {
+      width: 100px;
+      height: 100px;
+    }
+  }
+</style>

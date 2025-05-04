@@ -1,0 +1,28 @@
+---
+type SocialLink = {
+  link: string;
+  icon: string;
+};
+
+const links: SocialLink[] = [
+  { link: "youtube.com/@bikyu42", icon: "fa-brands fa-youtube" },
+  { link: "x.com/Alche_bky", icon: "fa-brands fa-x-twitter" }
+];
+
+const isImage = (icon: string) =>
+  icon.endsWith(".png") || icon.endsWith(".jpg") || icon.endsWith(".jpeg") || icon.endsWith(".svg");
+---
+
+<div class="flex justify-center gap-8">
+  {
+    links.map(({ link, icon }) => (
+      <a class="text-3xl" aria-label="link" target="_blank" href={`https://${link}`}>
+        {isImage(icon) ? (
+          <img src={icon} alt="icon" class="w-6 h-6" />
+        ) : (
+          <i class={icon}></i>
+        )}
+      </a>
+    ))
+  }
+</div>
