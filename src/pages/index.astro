@@ -3,56 +3,87 @@ import ProfileIcon from "../components/ProfileIcon.astro";
 import LinkList from "../components/LinkList.astro";
 import SocialLinks from "../components/SocialLinks.astro";
 
----
-
-<html lang='en'>
+// Public/snap/picture1 フォルダに配置した画像ファイル名の配列
+const imageFiles = [
+  'picture1.jpg',
+  'picture2.jpg',
+  'picture3.jpg',
+  'picture4.jpg',
+  'picture5.jpg'
+];
+// imageFilesからランダムに4つ抽出
+const randomFiles = [...imageFiles]
+  .sort(() => Math.random() - 0.5)
+  .slice(0, 3);
+--- 
+<html lang="en">
   <head>
-    <meta charset='utf-8' />
-    <link rel='icon' type='image/x-icon' href='/icon/Profile.png' />
-    <meta name='viewport' content='width=device-width' />
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/x-icon" href="/icon/Profile.png" />
+    <meta name="viewport" content="width=device-width" />
     <title>Bikyu</title>
     <link
-      rel='stylesheet'
-      href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css'
-      integrity='sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=='
-      crossorigin='anonymous'
-      referrerpolicy='no-referrer'
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <style>
       @font-face {
         font-family: Geist;
         src: url(/Geist.ttf);
         font-display: swap;
       }
-/* 既存の背景スタイル */
-    body { 
-      background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), 
-        url('/background/VRChat_2025-01-26_22-36-06.612_3840x2160.png');
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center;
-      height: 100vh;
-      margin: 0;
-      font-family: Arial, sans-serif;
-      color: white;
-      text-align: center;
-    }
-  @media (max-width: 768px) {
-    .icon {
-      width: 100px; /* スマホ向けに小さく */
-      height: 100px;
-    }
-}
+      /* 背景スタイル */
+      body {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), 
+          url('/background/VRChat_2025-01-26_22-36-06.612_3840x2160.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+      }
     </style>
   </head>
   <body
-    class='bg-[#1e1e1e] flex justify-center items-center w-screen h-screen font-[Geist] text-white'
+    class="bg-[#1e1e1e] flex flex-col justify-center items-center w-screen min-h-screen font-[Geist] text-white"
   >
-    <main class='w-[80%] flex flex-col gap-8'>
+    <div class="w-[80%] mt-8 flex flex-col lg:flex-row gap-3">
+      <main class="flex-1 flex flex-col gap-8">
       <ProfileIcon />
-      <h1 class='md:text-6xl text-4xl font-black text-center'>Bikyu</h1>
+      <h1 class="md:text-6xl text-4xl font-black text-center">Bikyu</h1>
       <LinkList/>
       <SocialLinks />
-    </main>
+      </main>
+
+    <!-- Public/snap/picture1 配下の画像をスタイリッシュに表示 -->
+    <section 
+      id="gallery" 
+      class="flex-1 mt-0 px-6 py-10 bg-[#111a24] bg-opacity-30 backdrop-blur-md rounded-2xl shadow-2xl"
+    >
+      <header class="mb-8 text-center">
+        <h2 class="text-4xl font-bold">
+          snapshot
+        </h2>
+      </header>
+      <div class="columns-1 sm:columns-2 lg:columns2 gap-6 space-y-6">
+        {randomFiles.map((file) => (
+          <div
+            class="break-inside-avoid relative overflow-hidden p-2 border-2 border-white border-opacity-50 rounded-md shadow-lg group"
+            style="clip-path: polygon(20px 0%, calc(100% - 20px) 0%, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0% calc(100% - 20px), 0% 20px);"
+          >
+            <img
+              src={`/snap/${file}`}
+              alt={file}
+              class="w-full object-cover rounded-md transition-transform duration-300 group-hover:scale-105"
+            />
+            <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </div>
+        ))}
+      </div>
+    </section>
+    </div>
   </body>
 </html>
