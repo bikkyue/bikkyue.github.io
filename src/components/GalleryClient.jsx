@@ -2,28 +2,40 @@ import { useEffect, useState } from "react";
 
 export default function GalleryClient({ apiUrl, tag, limit }) {
   const [images, setImages] = useState([]);
+  const [apiError, setApiError] = useState(false);
 
   useEffect(() => {
     fetch(`${apiUrl}?tag=${tag}&limit=${limit}`)
-      .then(res => res.json())
-      .then(setImages)
-      .catch(() => setImages([]));
+      .then(res => {
+        if (!res.ok) {
+          if (res.status === 429 || res.status === 500) {
+            setApiError(true);
+            return Promise.reject(new Error(`HTTP error ${res.status}`));
+          }
+          return Promise.reject(new Error(`HTTP error ${res.status}`));
+        }
+        return res.json();
+      })
+      .then(data => {
+        if (!Array.isArray(data)) {
+          setApiError(true);
+          return;
+        }
+        if (data.error) {
+          setApiError(true);
+          return;
+        }
+        setImages(data);
+      })
+      .catch(() => {
+        setApiError(true);
+        setImages([]);
+      });
   }, [apiUrl, tag, limit]);
-  useEffect(() => {
-  fetch(`${apiUrl}?tag=${tag}&limit=${limit}`)
-    .then(res => {
-      console.log("API Response:", res);
-      return res.json();
-    })
-    .then(data => {
-      console.log("Fetched data:", data);
-      setImages(data);
-    })
-    .catch(err => {
-      console.error("Fetch error:", err);
-      setImages([]);
-    });
-}, [apiUrl, tag, limit]);
+
+  if (apiError) {
+    return null;
+  }
 
   if (images.length === 0) {
     return <div>画像を取得中...</div>;
