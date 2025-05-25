@@ -10,7 +10,7 @@ const { title = defaultTitle || `#${galleryTag}`, images = [] } = Astro.props as
 ---
 <section id="gallery" class="flex-1 px-6 py-10 bg-[#111a24] bg-opacity-30 backdrop-blur-md rounded-2xl shadow-2xl">
   <header class="mb-8 text-center">
-    <h2 class="text-4xl font-bold">{title}</h2>
+    <h2 class="text-2xl sm:text-4xl font-bold break-words font-['Fira_Mono']">{title}</h2>
   </header>
   <div class={columnsClass + " gap-6"}>
     {images.map(({ imageUrl, noteUrl }) => (
