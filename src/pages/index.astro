@@ -1,81 +1,55 @@
 ---
+  // コンポーネントのインポート
 import ProfileIcon from "../components/ProfileIcon.astro";
 import LinkList from "../components/LinkList.astro";
 import SocialLinks from "../components/SocialLinks.astro";
+import Gallery from "../components/Gallery.astro";
 
-const res = await fetch("https://misskey-api-worker.misskey-proxy.workers.dev/images");
+  // .env から環境変数を取得
+const apiUrl = import.meta.env.PUBLIC_MISSKEY_API_URL;
+const siteTitle = import.meta.env.PUBLIC_SITE_TITLE;
+const galleryTag = import.meta.env.PUBLIC_GALLERY_TAG;
+const bgImage = import.meta.env.PUBLIC_BG_IMAGE;
+const galleryLimit = parseInt(import.meta.env.PUBLIC_GALLERY_LIMIT);
+const profileIcon = import.meta.env.PUBLIC_PROFILE_ICON;
+
+  // Misskey画像APIから画像データを取得
+const res = await fetch(`${apiUrl}?tag=${galleryTag}&limit=${galleryLimit}`);
 const imageFiles = await res.json();
---- 
+---
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/x-icon" href="/icon/Profile.png" />
+    <link rel="icon" type="image/x-icon" href={profileIcon} />
     <meta name="viewport" content="width=device-width" />
-    <title>Bikyu83</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    <title>{siteTitle}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
       integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <style>
-      @font-face {
-        font-family: Geist;
-        src: url(/Geist.ttf);
-        font-display: swap;
-      }
-      /* 背景スタイル */
-      body {
-        background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), 
-          url('/background/VRChat_2025-01-26_22-36-06.612_3840x2160.png');
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
-      }
-    </style>
+<style>
+  @font-face {
+    font-family: Geist;
+    src: url(/Geist.ttf);
+    font-display: swap;
+  }
+</style>
   </head>
-  <body
-    class="bg-[#1e1e1e] flex flex-col justify-center items-center w-screen min-h-screen font-[Geist] text-white"
-  >
+<body
+  class="bg-[#1e1e1e] flex flex-col justify-center items-center w-screen min-h-screen font-[Geist] text-white"
+  style={`background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url('${bgImage}'); background-repeat: no-repeat; background-size: cover; background-position: center;`}
+>
     <div class="w-[80%] mt-8 flex flex-col lg:flex-row gap-3">
-      <main class="flex-1 flex flex-col gap-8">
-      <ProfileIcon />
-      <h1 class="md:text-6xl text-4xl font-black text-center">Bikyu</h1>
-      <LinkList/>
-      <SocialLinks />
+      <main class="flex-1 flex flex-col gap-8 mt-12">
+        {/* プロフィールアイコン表示 */}
+        <ProfileIcon src={profileIcon} />
+        <h1 class="md:text-6xl text-4xl font-black text-center">Bikyu</h1>
+        <LinkList/>
+        <SocialLinks />
       </main>
-
-    <!-- Public/snap/picture1 配下の画像をスタイリッシュに表示 -->
-    <section 
-      id="gallery" 
-      class="flex-1 mt-0 px-6 py-10 bg-[#111a24] bg-opacity-30 backdrop-blur-md rounded-2xl shadow-2xl"
-    >
-      <header class="mb-8 text-center">
-        <h2 class="text-4xl font-bold">
-          #SnpsB1kyueTrac3D
-        </h2>
-      </header>
-      <div class="columns-1 sm:columns-2 lg:columns2 gap-6">
-        {imageFiles.map(({ imageUrl, noteUrl }) => (
-          <a href={noteUrl} target="_blank" rel="noopener noreferrer">
-            <div
-              class="break-inside-avoid relative overflow-hidden p-2 border-2 border-white border-opacity-50 rounded-md shadow-lg group mb-6"
-              style="clip-path: polygon(20px 0%, calc(100% - 20px) 0%, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0% calc(100% - 20px), 0% 20px);"
-            >
-              <img
-                src={imageUrl}
-                alt="Misskey Image"
-                class="w-full object-cover rounded-md transition-transform duration-300 group-hover:scale-105"
-              />
-              <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </div>
-          </a>
-        ))}
-      </div>
-    </section>
+      {/* ギャラリー表示 */}
+      <Gallery title={`#${galleryTag}`} images={imageFiles} />
     </div>
   </body>
 </html>
