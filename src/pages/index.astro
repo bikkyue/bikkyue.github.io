@@ -12,10 +12,14 @@ const galleryTag = import.meta.env.PUBLIC_GALLERY_TAG;
 const bgImage = import.meta.env.PUBLIC_BG_IMAGE;
 const galleryLimit = parseInt(import.meta.env.PUBLIC_GALLERY_LIMIT);
 const profileIcon = import.meta.env.PUBLIC_PROFILE_ICON;
+const ogImage = import.meta.env.PUBLIC_OG_IMAGE;
 ---
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImage} />
     <link rel="icon" type="image/x-icon" href={profileIcon} />
     <meta name="viewport" content="width=device-width" />
     <title>{siteTitle}</title>
