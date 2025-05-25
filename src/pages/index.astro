@@ -3,25 +3,15 @@ import ProfileIcon from "../components/ProfileIcon.astro";
 import LinkList from "../components/LinkList.astro";
 import SocialLinks from "../components/SocialLinks.astro";
 
-// Public/snap/picture1 フォルダに配置した画像ファイル名の配列
-const imageFiles = [
-  'picture1.jpg',
-  'picture2.jpg',
-  'picture3.jpg',
-  'picture4.jpg',
-  'picture5.jpg'
-];
-// imageFilesからランダムに4つ抽出
-const randomFiles = [...imageFiles]
-  .sort(() => Math.random() - 0.5)
-  .slice(0, 3);
+const res = await fetch("https://misskey-api-worker.misskey-proxy.workers.dev/images");
+const imageFiles = await res.json();
 --- 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/x-icon" href="/icon/Profile.png" />
     <meta name="viewport" content="width=device-width" />
-    <title>Bikyu</title>
+    <title>Bikyu83</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
@@ -65,22 +55,24 @@ const randomFiles = [...imageFiles]
     >
       <header class="mb-8 text-center">
         <h2 class="text-4xl font-bold">
-          snapshot
+          #SnpsB1kyueTrac3D
         </h2>
       </header>
-      <div class="columns-1 sm:columns-2 lg:columns2 gap-6 space-y-6">
-        {randomFiles.map((file) => (
-          <div
-            class="break-inside-avoid relative overflow-hidden p-2 border-2 border-white border-opacity-50 rounded-md shadow-lg group"
-            style="clip-path: polygon(20px 0%, calc(100% - 20px) 0%, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0% calc(100% - 20px), 0% 20px);"
-          >
-            <img
-              src={`/snap/${file}`}
-              alt={file}
-              class="w-full object-cover rounded-md transition-transform duration-300 group-hover:scale-105"
-            />
-            <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          </div>
+      <div class="columns-1 sm:columns-2 lg:columns2 gap-6">
+        {imageFiles.map(({ imageUrl, noteUrl }) => (
+          <a href={noteUrl} target="_blank" rel="noopener noreferrer">
+            <div
+              class="break-inside-avoid relative overflow-hidden p-2 border-2 border-white border-opacity-50 rounded-md shadow-lg group mb-6"
+              style="clip-path: polygon(20px 0%, calc(100% - 20px) 0%, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0% calc(100% - 20px), 0% 20px);"
+            >
+              <img
+                src={imageUrl}
+                alt="Misskey Image"
+                class="w-full object-cover rounded-md transition-transform duration-300 group-hover:scale-105"
+              />
+              <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+          </a>
         ))}
       </div>
     </section>
