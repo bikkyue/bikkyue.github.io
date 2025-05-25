@@ -3,7 +3,7 @@
 import ProfileIcon from "../components/ProfileIcon.astro";
 import LinkList from "../components/LinkList.astro";
 import SocialLinks from "../components/SocialLinks.astro";
-import Gallery from "../components/Gallery.astro";
+import GalleryClient from "../components/GalleryClient.jsx";
 
   // .env から環境変数を取得
 const apiUrl = import.meta.env.PUBLIC_MISSKEY_API_URL;
@@ -12,22 +12,6 @@ const galleryTag = import.meta.env.PUBLIC_GALLERY_TAG;
 const bgImage = import.meta.env.PUBLIC_BG_IMAGE;
 const galleryLimit = parseInt(import.meta.env.PUBLIC_GALLERY_LIMIT);
 const profileIcon = import.meta.env.PUBLIC_PROFILE_ICON;
-
-  // Misskey画像APIから画像データを取得（エラーにも強くする）
-let imageFiles = [];
-try {
-  const res = await fetch(`${apiUrl}?tag=${galleryTag}&limit=${galleryLimit}`);
-  const contentType = res.headers.get("content-type");
-  if (res.ok && contentType && contentType.includes("application/json")) {
-    imageFiles = await res.json();
-  } else {
-    console.error("APIエラー or JSONでない応答", res.status, await res.text());
-    imageFiles = [];
-  }
-} catch (err) {
-  console.error("APIフェッチ失敗", err);
-  imageFiles = [];
-}
 ---
 <html lang="en">
   <head>
@@ -60,8 +44,8 @@ try {
         <LinkList/>
         <SocialLinks />
       </main>
-      {/* ギャラリー表示 */}
-      <Gallery title={`#${galleryTag}`} images={imageFiles} />
+      {/* ギャラリー表示（クライアントサイドでfetch） */}
+      <GalleryClient apiUrl={apiUrl} tag={galleryTag} limit={galleryLimit} client:load />
     </div>
   </body>
 </html>
