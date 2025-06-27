@@ -56,6 +56,11 @@ const bgStyle = `
         opacity: 1;
         transition: filter 1s ease, opacity 1s ease;
       }
+      @media (max-width: 768px) {
+        body::before {
+          background-position: calc(30%) center;
+        }
+      }
       body.bg-fadein::before {
         filter: blur(0);
         opacity: 1;
@@ -158,7 +163,7 @@ const bgStyle = `
             <div class="flex justify-center items-center w-fit mx-auto">
               <ProfileIcon src={profileIcon} />
             </div>
-            <h1 class="md:text-6xl text-4xl font-black text-center">Bikyu</h1>
+<h1 class="text-5xl md:text-6xl font-black text-center">Bikyu</h1>
             <LinkList />
             <SocialLinks />
           </main>
