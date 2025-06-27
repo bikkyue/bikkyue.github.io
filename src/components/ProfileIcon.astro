@@ -4,7 +4,7 @@ const { src = "/icon/Profile.png", alt = "Profile Icon" } = Astro.props;
 ---
 
 <div class="icon">
-  <img src={src} alt={alt} />
+  <img src={src} alt={alt} class="mx-auto block max-w-full h-auto" />
 </div>
 
 <style>
@@ -12,22 +12,15 @@ const { src = "/icon/Profile.png", alt = "Profile Icon" } = Astro.props;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 15vw;
-    height: 15vw;
-    max-width: 150px;
-    max-height: 150px;
+    width: 120px !important;
+    height: 120px !important;
+    max-width: none !important;
+    max-height: none !important;
     border-radius: 50%;
     overflow: hidden;
     border: 2px solid #FFFFFF;
     margin: 0 auto;
     background: #222;
-  }
-
-  @media (max-width: 768px) {
-    .icon {
-      width: 100px;
-      height: 100px;
-    }
   }
 
   .icon img {

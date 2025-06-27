@@ -43,9 +43,6 @@ export default function GalleryClient({ apiUrl, tag, limit }) {
 
   return (
     <section className="flex-1 px-6 py-10 bg-[#111a24] bg-opacity-30 backdrop-blur-md rounded-2xl shadow-2xl">
-      <header className="mb-8 text-center">
-        <h2 className="text-2xl sm:text-4xl font-bold break-words font-['Fira_Mono']">#{tag}</h2>
-      </header>
       <div className="columns-1 sm:columns-2 lg:columns2 gap-6">
         {images.map(({ imageUrl, noteUrl }) => (
           <a href={noteUrl} target="_blank" rel="noopener noreferrer" key={imageUrl}>
