@@ -178,7 +178,7 @@ const bgStyle = `
           class="w-full max-w-screen-lg mt-8 flex flex-col lg:flex-row gap-3 mx-auto"
         >
           <main
-            class="flex-1 flex flex-col gap-12 mt-20 mb-12 mx-auto w-full max-w-screen-md px-4"
+            class="flex flex-col gap-8 justify-center items-center min-h-[450px] mx-auto w-full max-w-screen-md px-4"
           >
             <div class="flex justify-center items-center w-fit mx-auto">
               <ProfileIcon src={profileIcon} />
@@ -193,19 +193,20 @@ const bgStyle = `
     <script is:inline>
       // ページ読み込み後にパーティクルの初期化とローディング演出を一括制御
       window.addEventListener("DOMContentLoaded", () => {
+        const isMobile = window.innerWidth <= 768;
         if (window.tsParticles) {
           window.tsParticles.load("particles-bg", {
             fullScreen: { enable: false },
             background: { color: { value: "transparent" } },
             particles: {
-              number: { value: 40, density: { enable: true, value_area: 600 } },
+              number: { value: isMobile ? 18 : 40, density: { enable: true, value_area: 600 } },
               color: { value: "#fff" },
               opacity: { value: 0.6, random: true },
-              size: { value: 4, random: true },
+              size: { value: isMobile ? 2 : 4, random: true },
               move: { enable: true, speed: 1.5 },
               links: { enable: true, color: "#fff", opacity: 0.2 }
             },
-            detectRetina: true
+            detectRetina: false
           });
         }
         // 背景フェードインとブラー解除のタイミング調整
