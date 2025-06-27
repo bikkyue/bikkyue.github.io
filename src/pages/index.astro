@@ -52,7 +52,7 @@ const bgStyle = `
         background-size: cover;
         background-position: center;
         pointer-events: none;
-        filter: blur(8px);
+        filter: blur(3px);
         opacity: 1;
         transition: filter 1s ease, opacity 1s ease;
       }
@@ -65,9 +65,6 @@ const bgStyle = `
         filter: blur(0);
         opacity: 1;
       }
-      body.blurred::before {
-        /* filter: blur(4px); 削除 or コメントアウト */
-      }
       body > * {
         position: relative;
         z-index: 1;
@@ -78,8 +75,8 @@ const bgStyle = `
       }
       body.show-content .content {
         opacity: 1;
-        transition: opacity 0.7s;
       }
+      /* ローディング用スタイル */
       .loader {
         position: fixed;
         z-index: 10000;
@@ -137,8 +134,30 @@ const bgStyle = `
         max-width: 1400px;
         margin: 0 auto;
         min-height: 600px;
+        position: relative;
       }
     </style>
+    <style>
+      body::after {
+        content: "";
+        position: fixed;
+        z-index: 0;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        opacity: 1;
+        transition: opacity 3.5s ease;
+        /* Transparent-to-dark radial gradient mask only */
+        background: radial-gradient(
+          ellipse at 50% 40%,
+          rgba(0,0,0,0) 60%,
+          rgba(255,255,255,0.13) 100%
+        );
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
   </head>
   <body
     class="bg-[#1e1e1e] flex flex-col justify-center items-center w-screen min-h-screen text-white"
@@ -154,6 +173,7 @@ const bgStyle = `
 
     <div class="content">
       <div class="icon-wrapper">
+        <div id="particles-bg" style="position:absolute; inset:0; z-index:0; pointer-events:none;"></div>
         <div
           class="w-full max-w-screen-lg mt-8 flex flex-col lg:flex-row gap-3 mx-auto"
         >
@@ -171,13 +191,29 @@ const bgStyle = `
       </div>
     </div>
     <script is:inline>
+      // ページ読み込み後にパーティクルの初期化とローディング演出を一括制御
       window.addEventListener("DOMContentLoaded", () => {
+        if (window.tsParticles) {
+          window.tsParticles.load("particles-bg", {
+            fullScreen: { enable: false },
+            background: { color: { value: "transparent" } },
+            particles: {
+              number: { value: 40, density: { enable: true, value_area: 600 } },
+              color: { value: "#fff" },
+              opacity: { value: 0.6, random: true },
+              size: { value: 4, random: true },
+              move: { enable: true, speed: 1.5 },
+              links: { enable: true, color: "#fff", opacity: 0.2 }
+            },
+            detectRetina: true
+          });
+        }
+        // 背景フェードインとブラー解除のタイミング調整
         setTimeout(() => {
           document.body.classList.add("bg-fadein");
-        }, 1400);
-        setTimeout(() => {
           document.body.classList.add("blurred");
-        }, 1000);
+        }, 2000);
+        // コンテンツ表示とローダー非表示
         setTimeout(() => {
           document.body.classList.add("show-content");
           document.getElementById("loader").classList.add("hide");
