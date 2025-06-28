@@ -223,6 +223,8 @@ const bgStyle = `
         function loadParticlesWhenReady() {
           const el = document.getElementById("particles-bg");
           if (window.tsParticles && el) {
+            const existing = window.tsParticles.domItem(0);
+            if (existing) existing.destroy();
             window.tsParticles.load("particles-bg", {
               fullScreen: { enable: false },
               background: { color: { value: "transparent" } },
