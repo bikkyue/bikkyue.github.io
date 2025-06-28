@@ -5,12 +5,12 @@ import LinkList from "../components/LinkList.astro";
 import SocialLinks from "../components/SocialLinks.astro";
 
 // .env から環境変数を取得
-const apiUrl = import.meta.env.PUBLIC_MISSKEY_API_URL;
+//const apiUrl = import.meta.env.PUBLIC_MISSKEY_API_URL;
 const siteTitle = import.meta.env.PUBLIC_SITE_TITLE;
 const siteDescription = import.meta.env.PUBLIC_SITE_DESCRIPTION;
-const galleryTag = import.meta.env.PUBLIC_GALLERY_TAG;
+//const galleryTag = import.meta.env.PUBLIC_GALLERY_TAG;
 const bgImage = import.meta.env.PUBLIC_BG_IMAGE;
-const galleryLimit = parseInt(import.meta.env.PUBLIC_GALLERY_LIMIT);
+//const galleryLimit = parseInt(import.meta.env.PUBLIC_GALLERY_LIMIT);
 const profileIcon = import.meta.env.PUBLIC_PROFILE_ICON;
 const ogImage = import.meta.env.PUBLIC_OG_IMAGE;
 
@@ -36,6 +36,11 @@ const bgStyle = `
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet" />
     <style>
+      html, body {
+        min-height: 100dvh;
+        height: 100dvh;
+        overflow-x: hidden;
+      }
       body {
         font-family: 'M PLUS Rounded 1c', 'ヒラギノ角ゴ ProN', 'Hiragino Kaku Gothic ProN', 'メイリオ', Meiryo, sans-serif;
         font-weight: 700;
@@ -136,6 +141,27 @@ const bgStyle = `
         min-height: 600px;
         position: relative;
       }
+      @media (max-width: 600px) {
+        .icon-wrapper {
+          min-height: 0;
+        }
+      }
+      #particles-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0; /* パーティクルを一番下に */
+        pointer-events: none;
+      }
+      .icon-wrapper {
+        position: relative;
+      }
+      .icon-wrapper > .w-full,
+      .icon-wrapper main,
+      .icon-wrapper h1,
+      .icon-wrapper .flex {
+        position: relative;
+        z-index: 2; /* カードやテキストなどをパーティクルより前面に */
+      }
     </style>
     <style>
       body::after {
@@ -194,21 +220,27 @@ const bgStyle = `
       // ページ読み込み後にパーティクルの初期化とローディング演出を一括制御
       window.addEventListener("DOMContentLoaded", () => {
         const isMobile = window.innerWidth <= 768;
-        if (window.tsParticles) {
-          window.tsParticles.load("particles-bg", {
-            fullScreen: { enable: false },
-            background: { color: { value: "transparent" } },
-            particles: {
-              number: { value: isMobile ? 18 : 40, density: { enable: true, value_area: 600 } },
-              color: { value: "#fff" },
-              opacity: { value: 0.6, random: true },
-              size: { value: isMobile ? 2 : 4, random: true },
-              move: { enable: true, speed: 1.5 },
-              links: { enable: true, color: "#fff", opacity: 0.2 }
-            },
-            detectRetina: false
-          });
+        function loadParticlesWhenReady() {
+          const el = document.getElementById("particles-bg");
+          if (window.tsParticles && el) {
+            window.tsParticles.load("particles-bg", {
+              fullScreen: { enable: false },
+              background: { color: { value: "transparent" } },
+              particles: {
+                number: { value: 28, density: { enable: true, value_area: 600 } },
+                color: { value: "#fff" },
+                opacity: { value: 0.6, random: true },
+                size: { value: 3, random: true },
+                move: { enable: true, speed: 1.3 },
+                links: { enable: true, color: "#fff", opacity: 0.2 }
+              },
+              detectRetina: false
+            });
+          } else {
+            setTimeout(loadParticlesWhenReady, 120);
+          }
         }
+        loadParticlesWhenReady();
         // 背景フェードインとブラー解除のタイミング調整
         setTimeout(() => {
           document.body.classList.add("bg-fadein");
