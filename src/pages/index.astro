@@ -217,7 +217,7 @@ const bgStyle = `
       </div>
     </div>
     <script is:inline>
-      function recreateParticlesBg() {
+      const recreateParticlesBg = () => {
         const old = document.getElementById("particles-bg");
         if (old) old.remove();
         // 新しいdivを再生成
@@ -230,9 +230,9 @@ const bgStyle = `
         // .icon-wrapper の先頭に挿入
         const parent = document.querySelector(".icon-wrapper");
         if (parent) parent.prepend(newDiv);
-      }
+      };
 
-      function loadParticles() {
+      const loadParticles = () => {
         const el = document.getElementById("particles-bg");
         if (window.tsParticles && el) {
           const existing = window.tsParticles.domItem(0);
@@ -251,7 +251,7 @@ const bgStyle = `
             detectRetina: false
           });
         }
-      }
+      };
 
       window.addEventListener("DOMContentLoaded", () => {
         recreateParticlesBg();
