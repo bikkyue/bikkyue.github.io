@@ -233,23 +233,27 @@ const bgStyle = `
       };
 
       const loadParticles = () => {
-        const el = document.getElementById("particles-bg");
-        if (window.tsParticles && el) {
-          const existing = window.tsParticles.domItem(0);
-          if (existing) existing.destroy();
-          window.tsParticles.load("particles-bg", {
-            fullScreen: { enable: false },
-            background: { color: { value: "transparent" } },
-            particles: {
-              number: { value: 28, density: { enable: true, value_area: 600 } },
-              color: { value: "#fff" },
-              opacity: { value: 0.6, random: true },
-              size: { value: 3, random: true },
-              move: { enable: true, speed: 1.3 },
-              links: { enable: true, color: "#fff", opacity: 0.2 }
-            },
-            detectRetina: false
-          });
+        try {
+          const el = document.getElementById("particles-bg");
+          if (window.tsParticles && el) {
+            const existing = window.tsParticles.domItem(0);
+            if (existing) existing.destroy();
+            window.tsParticles.load("particles-bg", {
+              fullScreen: { enable: false },
+              background: { color: { value: "transparent" } },
+              particles: {
+                number: { value: 28, density: { enable: true, value_area: 600 } },
+                color: { value: "#fff" },
+                opacity: { value: 0.6, random: true },
+                size: { value: 3, random: true },
+                move: { enable: true, speed: 1.3 },
+                links: { enable: true, color: "#fff", opacity: 0.2 }
+              },
+              detectRetina: false
+            });
+          }
+        } catch(e) {
+          console.error('tsParticlesロード失敗:', e);
         }
       };
 
