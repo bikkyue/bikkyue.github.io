@@ -215,74 +215,84 @@ const bgStyle = `
         </div>
       </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js?cb=20240629"></script>    <script is:inline>
-      const recreateParticlesBg = () => {
-        const old = document.getElementById("particles-bg");
-        if (old) old.remove();
-        // 新しいdivを再生成
-        const newDiv = document.createElement("div");
-        newDiv.id = "particles-bg";
-        newDiv.style.position = "absolute";
-        newDiv.style.inset = "0";
-        newDiv.style.zIndex = "0";
-        newDiv.style.pointerEvents = "none";
-        // .icon-wrapper の先頭に挿入
-        const parent = document.querySelector(".icon-wrapper");
-        if (parent) parent.prepend(newDiv);
-      };
+    <script is:inline>
+function recreateParticlesBg() {
+  const old = document.getElementById("particles-bg");
+  if (old) old.remove();
+  // 新しいdivを再生成
+  const newDiv = document.createElement("div");
+  newDiv.id = "particles-bg";
+  newDiv.style.position = "absolute";
+  newDiv.style.inset = "0";
+  newDiv.style.zIndex = "0";
+  newDiv.style.pointerEvents = "none";
+  const parent = document.querySelector(".icon-wrapper");
+  if (parent) parent.prepend(newDiv);
+}
 
-      const loadParticles = () => {
-        try {
-          const el = document.getElementById("particles-bg");
-          if (window.tsParticles && el) {
-            const existing = window.tsParticles.domItem(0);
-            if (existing) existing.destroy();
-            window.tsParticles.load("particles-bg", {
-              fullScreen: { enable: false },
-              background: { color: { value: "transparent" } },
-              particles: {
-                number: { value: 28, density: { enable: true, value_area: 600 } },
-                color: { value: "#fff" },
-                opacity: { value: 0.6, random: true },
-                size: { value: 3, random: true },
-                move: { enable: true, speed: 1.3 },
-                links: { enable: true, color: "#fff", opacity: 0.2 }
-              },
-              detectRetina: false
-            });
-          }
-        } catch(e) {
-          console.error('tsParticlesロード失敗:', e);
-        }
-      };
-
-      window.addEventListener("DOMContentLoaded", () => {
-        recreateParticlesBg();
-        loadParticles();
-        setTimeout(() => {
-          document.body.classList.add("bg-fadein");
-          document.body.classList.add("blurred");
-        }, 2000);
-        setTimeout(() => {
-          document.body.classList.add("show-content");
-          document.getElementById("loader").classList.add("hide");
-        }, 1400);
+function loadParticles() {
+  try {
+    const el = document.getElementById("particles-bg");
+    if (window.tsParticles && el) {
+      const existing = window.tsParticles.domItem(0);
+      if (existing) existing.destroy();
+      window.tsParticles.load("particles-bg", {
+        fullScreen: { enable: false },
+        background: { color: { value: "transparent" } },
+        particles: {
+          number: { value: 28, density: { enable: true, value_area: 600 } },
+          color: { value: "#fff" },
+          opacity: { value: 0.6, random: true },
+          size: { value: 3, random: true },
+          move: { enable: true, speed: 1.3 },
+          links: { enable: true, color: "#fff", opacity: 0.2 }
+        },
+        detectRetina: false
       });
+    }
+  } catch(e) {
+    console.error('tsParticlesロード失敗:', e);
+  }
+}
+
+// tsParticlesのロードをリトライ
+function ensureTsParticlesLoaded(callback, attempt = 0) {
+  if (window.tsParticles) {
+    callback();
+  } else {
+    if (attempt > 10) {
+      console.error('tsParticlesのロードに10回失敗しました');
+      return;
+    }
+    // scriptタグが既にない場合だけ追加
+    if (!document.getElementById('tsparticles-script')) {
+      const script = document.createElement('script');
+      script.id = 'tsparticles-script';
+      script.src = 'https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js?cb=20240630';
+      script.onload = () => callback();
+      document.body.appendChild(script);
+    }
+    setTimeout(() => ensureTsParticlesLoaded(callback, attempt + 1), 100);
+  }
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  recreateParticlesBg();
+  ensureTsParticlesLoaded(loadParticles);
+  setTimeout(() => {
+    document.body.classList.add("bg-fadein");
+    document.body.classList.add("blurred");
+  }, 2000);
+  setTimeout(() => {
+    document.body.classList.add("show-content");
+    document.getElementById("loader").classList.add("hide");
+  }, 1400);
+});
 
 window.addEventListener("pageshow", function(event) {
   if (event.persisted) {
     recreateParticlesBg();
-    // tsParticlesがいなければ、スクリプトを動的に再ロード
-    if (!window.tsParticles) {
-      const script = document.createElement('script');
-      script.src = "https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js?cb=20240629";
-      script.onload = () => {
-        loadParticles();
-      };
-      document.body.appendChild(script);
-    } else {
-      loadParticles();
-    }
+    ensureTsParticlesLoaded(loadParticles);
   }
 });
     </script>
