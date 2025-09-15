@@ -1,0 +1,302 @@
+---
+  // コンポーネントのインポート
+import ProfileIcon from "../components/ProfileIcon.astro";
+import LinkList from "../components/LinkList.astro";
+import SocialLinks from "../components/SocialLinks.astro";
+
+// .env から環境変数を取得
+//const apiUrl = import.meta.env.PUBLIC_MISSKEY_API_URL;
+const siteTitle = import.meta.env.PUBLIC_SITE_TITLE;
+const siteDescription = import.meta.env.PUBLIC_SITE_DESCRIPTION;
+//const galleryTag = import.meta.env.PUBLIC_GALLERY_TAG;
+const bgImage = import.meta.env.PUBLIC_BG_IMAGE;
+//const galleryLimit = parseInt(import.meta.env.PUBLIC_GALLERY_LIMIT);
+const profileIcon = import.meta.env.PUBLIC_PROFILE_ICON;
+const ogImage = import.meta.env.PUBLIC_OG_IMAGE;
+
+const bgStyle = `
+  body::before {
+    background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url('${bgImage}');
+  }
+`;
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImage} />
+    <link rel="icon" type="image/x-icon" href={profileIcon} />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={siteDescription} />
+    <title>{siteTitle}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet" />
+    <style>
+      html, body {
+        min-height: 100dvh;
+        height: 100dvh;
+        overflow-x: hidden;
+      }
+      body {
+        font-family: 'M PLUS Rounded 1c', 'ヒラギノ角ゴ ProN', 'Hiragino Kaku Gothic ProN', 'メイリオ', Meiryo, sans-serif;
+        font-weight: 700;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        z-index: 0;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        pointer-events: none;
+        filter: blur(3px);
+        opacity: 1;
+        transition: filter 1s ease, opacity 1s ease;
+      }
+      @media (max-width: 768px) {
+        body::before {
+          background-position: calc(30%) center;
+        }
+      }
+      body.bg-fadein::before {
+        filter: blur(0);
+        opacity: 1;
+      }
+      body > * {
+        position: relative;
+        z-index: 1;
+      }
+      .content {
+        opacity: 0;
+        transition: opacity 0.7s;
+      }
+      body.show-content .content {
+        opacity: 1;
+      }
+      /* ローディング用スタイル */
+      .loader {
+        position: fixed;
+        z-index: 10000;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: rgba(20, 20, 20, 0.7);
+        transition: opacity 0.5s;
+      }
+      .loader.hide {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .spinner {
+        border: 4px solid #fff3;
+        border-top: 4px solid #fff;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin-bottom: 20px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .loading-text {
+        color: #fff;
+        font-size: 1.3rem;
+        letter-spacing: 0.1em;
+        animation: blink 1.5s steps(2, start) infinite;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.2;
+        }
+      }
+      .icon-wrapper {
+        text-align: center;
+        padding: 3rem 2rem;
+        border-radius: 0.5rem;
+        background-color: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        display: block;
+        max-width: 1400px;
+        margin: 0 auto;
+        min-height: 600px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      @media (max-width: 600px) {
+        .icon-wrapper {
+          min-height: 0;
+        }
+      }
+      #particles-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0; /* パーティクルを一番下に */
+        pointer-events: none;
+      }
+      .icon-wrapper {
+        position: relative;
+      }
+      .icon-wrapper > .w-full,
+      .icon-wrapper main,
+      .icon-wrapper h1,
+      .icon-wrapper .flex {
+        position: relative;
+        z-index: 2; /* カードやテキストなどをパーティクルより前面に */
+      }
+    </style>
+    <style>
+      body::after {
+        content: "";
+        position: fixed;
+        z-index: 0;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        opacity: 1;
+        transition: opacity 3.5s ease;
+        /* Transparent-to-dark radial gradient mask only */
+        background: radial-gradient(
+          ellipse at 50% 40%,
+          rgba(0,0,0,0) 60%,
+          rgba(255,255,255,0.13) 100%
+        );
+      }
+    </style>
+  </head>
+  <body
+    class="bg-[#1e1e1e] flex flex-col justify-center items-center w-screen min-h-screen text-white"
+    style={`position: relative; font-family: 'M PLUS Rounded 1c', 'ヒラギノ角ゴ ProN', 'Hiragino Kaku Gothic ProN', 'メイリオ', Meiryo, sans-serif; font-weight: 700;`}
+  >
+    <style set:html={bgStyle}></style>
+
+    <!-- ローディング演出 -->
+    <div id="loader" class="loader">
+      <div class="spinner"></div>
+      <div class="loading-text">Loading...</div>
+    </div>
+
+    <div class="content">
+      <div class="icon-wrapper">
+        <div id="particles-bg" style="position:absolute; inset:0; z-index:0; pointer-events:none;"></div>
+        <div
+          class="w-full max-w-screen-lg mt-8 flex flex-col lg:flex-row gap-3 mx-auto"
+        >
+          <main
+            class="flex justify-center items-center min-h-[600px] w-full px-4"
+          >
+            <img
+              src="/images/20250915_Chocolat_Hadashi.JPG"
+              alt="Chocolat"
+              class="border border-white shadow-lg"
+            />
+          </main>
+        </div>
+      </div>
+    </div>
+    <script is:inline>
+function recreateParticlesBg() {
+  const old = document.getElementById("particles-bg");
+  if (old) old.remove();
+  // 新しいdivを再生成
+  const newDiv = document.createElement("div");
+  newDiv.id = "particles-bg";
+  newDiv.style.position = "absolute";
+  newDiv.style.inset = "0";
+  newDiv.style.zIndex = "0";
+  newDiv.style.pointerEvents = "none";
+  const parent = document.querySelector(".icon-wrapper");
+  if (parent) parent.prepend(newDiv);
+}
+
+function loadParticles() {
+  try {
+    const el = document.getElementById("particles-bg");
+    if (window.tsParticles && el) {
+      const existing = window.tsParticles.domItem(0);
+      if (existing) existing.destroy();
+      window.tsParticles.load("particles-bg", {
+        fullScreen: { enable: false },
+        background: { color: { value: "transparent" } },
+        particles: {
+          number: { value: 50, density: { enable: true, value_area: 600 } },
+          color: { value: "#fff" },
+          opacity: { value: 0.6, random: true },
+          size: { value: 3, random: true },
+          move: { enable: true, speed: 1.3 },
+          links: { enable: true, color: "#fff", opacity: 0.2 }
+        },
+        detectRetina: false
+      });
+    }
+  } catch(e) {
+    console.error('tsParticlesロード失敗:', e);
+  }
+}
+
+// tsParticlesのロードをリトライ
+function ensureTsParticlesLoaded(callback, attempt = 0) {
+  if (window.tsParticles) {
+    callback();
+  } else {
+    if (attempt > 10) {
+      console.error('tsParticlesのロードに10回失敗しました');
+      return;
+    }
+    // scriptタグが既にない場合だけ追加
+    if (!document.getElementById('tsparticles-script')) {
+      const script = document.createElement('script');
+      script.id = 'tsparticles-script';
+      script.src = 'https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js?cb=20240630';
+      script.onload = () => callback();
+      document.body.appendChild(script);
+    }
+    setTimeout(() => ensureTsParticlesLoaded(callback, attempt + 1), 100);
+  }
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  recreateParticlesBg();
+  ensureTsParticlesLoaded(loadParticles);
+  setTimeout(() => {
+    document.body.classList.add("bg-fadein");
+    document.body.classList.add("blurred");
+  }, 2000);
+  setTimeout(() => {
+    document.body.classList.add("show-content");
+    document.getElementById("loader").classList.add("hide");
+  }, 1400);
+});
+
+window.addEventListener("pageshow", function(event) {
+  if (event.persisted) {
+    recreateParticlesBg();
+    ensureTsParticlesLoaded(loadParticles);
+  }
+});
+    </script>
+  </body>
+</html>
