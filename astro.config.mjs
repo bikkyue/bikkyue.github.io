@@ -6,5 +6,5 @@ import react from "@astrojs/react";
 // https://astro.build/config
 export default defineConfig({
   integrations: [tailwind(), react()],
-  site: 'https://github.com/bikkyue/bikkyue.github.io'
+  site: 'https://link.bikyu.dev'
 });
